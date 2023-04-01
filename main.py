@@ -11,8 +11,16 @@ import time
 from Postfix import Postfix
 import pyfiglet
 from Errors import Errors
+from Yalex import Yalex
 
 
 
 header = pyfiglet.figlet_format("Y A L E X")
 print(header)
+
+yalex = "./yalex/slr-1.yal"
+
+regex = Yalex(yalex).read_yalex()
+
+
+print(regex)
