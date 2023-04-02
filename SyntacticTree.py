@@ -85,7 +85,7 @@ class SyntacticTree:
 
     def visualize_tree(self, node=None):
         
-        description = ("NFA of " + self.title)
+        description = ("Syntactic Tree of " + self.title)
         graph = Digraph(comment=description)
         graph.attr(
             labelloc="t",

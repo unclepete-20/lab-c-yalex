@@ -10,7 +10,6 @@
 import time
 from Postfix import Postfix
 import pyfiglet
-from Errors import Errors
 from Yalex import Yalex
 from SyntacticTree import SyntacticTree
 
