@@ -12,7 +12,7 @@ class Postfix(object):
     STAR = '*'
     PLUS = '+'
     QUESTION = '?'
-    CONCAT = '•'
+    CONCAT = '.'
     LEFT_PAREN = '('
     RIGHT_PAREN = ')'
     OPERATORS = {PIPE: 1, CONCAT: 2, QUESTION: 3, STAR: 3, PLUS: 3}
