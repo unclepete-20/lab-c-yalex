@@ -12,6 +12,7 @@ from Postfix import Postfix
 import pyfiglet
 from Errors import Errors
 from Yalex import Yalex
+from SyntacticTree import SyntacticTree
 
 
 
@@ -22,5 +23,6 @@ yalex = "./yalex/slr-1.yal"
 
 regex = Yalex(yalex).read_yalex()
 
-
-print(regex)
+post = Postfix(regex)
+postfix = post.shunting_yard()
+print("\npostfix: ", postfix)

@@ -1,90 +1,44 @@
 # -*-coding:utf-8 -*-
 """
 @File    :   Postfix.py
-@Date    :   2023/02/26
+@Date    :   2023/04/01
 @Author  :   Pedro Arriola (20188)
 @Version :   1.0
 @Desc    :   Implementacion de caracteristicas de un Regex y funcionalidad Postfix.
 """
 
-
 class Postfix(object):
-    def __init__(self, regex):
-        self.expression = regex
-        self.operatorStack = []
-        self.postfixExpression = self.shunting_yard()
+    PIPE = '|'
+    STAR = '*'
+    PLUS = '+'
+    QUESTION = '?'
+    CONCAT = '•'
+    LEFT_PAREN = '('
+    RIGHT_PAREN = ')'
+    OPERATORS = {PIPE: 1, CONCAT: 2, QUESTION: 3, STAR: 3, PLUS: 3}
 
-    def precedence(self, token):
-        if token == "(":
-            return 1
-        elif token == "|":
-            return 2
-        elif token == ".":
-            return 3
-        elif token == "?":
-            return 4
-        elif token == "*":
-            return 4
-        elif token == "+":
-            return 4
-        else:
-            return 5
+    def __init__(self, regex):
+        self.regex = regex
+        self.stack = []
+        self.output = []
 
     def shunting_yard(self):
-
-        self.operators = ["|", "?", "+", "*"]
-        self.bin = ["|"]
-
-        queue = ""
-
-        for l in range(len(self.expression)):
-
-            s = self.expression[l]
-
-            if (l + 1) < len(self.expression):
-                r = self.expression[l + 1]
-
-                if (
-                    (s != "(")
-                    and (r != ")")
-                    and (r not in self.operators)
-                    and (s not in self.bin)
-                ):
-                    queue += s + "."
-
-                else:
-                    queue += s
-
-            elif s not in self.operators:
-                queue += s
-
-        postfix = ""
-        for exp in queue:
-
-            if exp == "(":
-                self.operatorStack.append(exp)
-
-            elif exp == ")":
-                while self.operatorStack[-1] != "(":
-                    postfix += self.operatorStack.pop()
-
-                self.operatorStack.pop()
-
+        for token in self.regex:
+            if token in self.OPERATORS:
+                while self.stack and self.stack[-1] != self.LEFT_PAREN and self.OPERATORS[token] <= self.OPERATORS.get(self.stack[-1], 0):
+                    self.output.append(self.stack.pop())
+                self.stack.append(token)
+            elif token == self.LEFT_PAREN:
+                self.stack.append(token)
+            elif token == self.RIGHT_PAREN:
+                while self.stack and self.stack[-1] != self.LEFT_PAREN:
+                    self.output.append(self.stack.pop())
+                if self.stack and self.stack[-1] == self.LEFT_PAREN:
+                    self.stack.pop()
             else:
-                while len(self.operatorStack) > 0:
-                    ultimoChar = self.operatorStack[-1]
-                    observado = self.precedence(ultimoChar)
-                    actual = self.precedence(exp)
+                self.output.append(token)
 
-                    if observado >= actual:
-                        postfix += self.operatorStack.pop()
+        while self.stack:
+            self.output.append(self.stack.pop())
 
-                    else:
-                        break
-
-                self.operatorStack.append(exp)
-
-        while len(self.operatorStack) > 0:
-            postfix += self.operatorStack.pop()
-
-        return postfix
+        return self.output
